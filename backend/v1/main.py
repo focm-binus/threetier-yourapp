@@ -12,6 +12,9 @@ from fastapi.openapi.docs import (
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
+import os
+import subprocess
+import json
 
 app = FastAPI(
         title="backend",
@@ -19,7 +22,7 @@ app = FastAPI(
         version="0.1.0",
         docs_url=None,
         redoc_url=None,
-        root_path="/api/v1/backend"
+        root_path=os.getenv('URL_DOC')
         )
 
 
@@ -38,7 +41,7 @@ app.mount("/static", StaticFiles(directory="/app/app/static"), name="static")
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(
-        openapi_url="/api/v1/backend/openapi.json",
+        openapi_url=os.getenv('URL_DOC')+"/openapi.json",
         title=app.title,
         swagger_favicon_url="/static/logo.png",
     )
@@ -46,7 +49,7 @@ async def custom_swagger_ui_html():
 @app.get("/redoc", include_in_schema=False)
 async def redoc_html():
     return get_redoc_html(
-        openapi_url="/api/v1/backend/openapi.json",
+        openapi_url=os.getenv('URL_DOC')+"/openapi.json",
         title=app.title + " - ReDoc",
         redoc_favicon_url="/static/logo.png",
     )
@@ -70,19 +73,14 @@ async def root():
     return HTMLResponse(content=html_content, status_code=200)
 
 
-@app.get("/populate")
-async def populate():
+
+@app.get("/retrieve")
+async def retrieve():
     try:
-        import pymongo
         from app.constant import kfc
         from app.constant import shawarma
-        myclient = pymongo.MongoClient("mongodb://mongo:27017/")
 
-        mydb = myclient["data"]
-        mycol = mydb["card"]
-
-        mylist = [
-            { 
+        data = [{
             'id':0,
             'image': kfc,
             'tagline': "KFC, who doesn't like it?",
@@ -90,8 +88,8 @@ async def populate():
             'badge': "FAV",
             'like': "1k",
             'view': "10k",
-            },
-            { 
+        },
+        {
             'id':1,
             'image': shawarma,
             'tagline': "Shawarma, hmm?",
@@ -99,26 +97,29 @@ async def populate():
             'badge': "UH",
             'like': "1",
             'view': "1k",
-            },
-        ]
+        }]
 
-        message = mycol.insert_many(mylist)
-
-        return {'status': 'success', 'ack': message.acknowledged} 
+        return {'status': 'success', 'data': data} 
     except Exception as e:
         return {"status":"failed", "message": str(e)}
 
-@app.get("/retrieve")
-async def retrieve():
+
+@app.get("/system")
+async def root():
     try:
-        import pymongo
-        myclient = pymongo.MongoClient("mongodb://mongo:27017/")
+        process  = subprocess.run(["ip",'-j',"address"],universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        mydb = myclient["data"]
-        mycol = mydb["card"]
+        list_json = json.loads(process.stdout)
 
-        data = [x for x in mycol.find({},{'_id':0})]
+        list_ifname = []
+        idx = 0
+        for data in list_json:
+            try:
+                list_ifname.append({str(idx):{'if_name':data['ifname'],'ip_addr':data['addr_info'][0]['local']}})
+                idx += 1
+            except:
+                pass
 
-        return {'status': 'success', 'data': data} 
+        return {'status': 'success', 'data': list_ifname} 
     except Exception as e:
         return {"status":"failed", "message": str(e)}

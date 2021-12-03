@@ -1,22 +1,16 @@
 version: "3.9"
 services:
-  mongo:
-    image: mongo:5.0.3
-    container_name: mongo
-    restart: always
-    ports:
-      - 27017:27017
   backend:
-    build: ./backend/
+    image: ardimasp/yourapp_backend:0.1
     container_name: backend
     ports:
-      - "8001:80"
+      - "8001:8001"
     command: ["/start-reload.sh"]
-    volumes:
-      - ./backend/v1:/app/app
-      - ./backend/v1/main.py:/app/app/main.py
+    environment:
+      - URL_DOC=/api/v1/backend
+      - PORT=8001
   nginx:
-    build: ./nginx/
+    image: ardimasp/yourapp_nginx:0.1
     container_name: nginx
     ports:
       - "8000:80"
@@ -24,16 +18,17 @@ services:
       - NGINX_PORT=80
       - SERVER_ADDRESS=localhost
       - SERVER_PORT=8000
+      - BACKEND_ADDRESS=backend
+      - BACKEND_PORT=8001
+      - FRONTEND_ADDRESS=frontend
+      - FRONTEND_PORT=8080
     depends_on:
       - backend
   frontend:
-    build:
-      context: ./frontend
+    image: ardimasp/yourapp_frontend:0.1
     ports:
       - "8080:8080"
     container_name: frontend
     environment:
       - SERVER_ADDRESS=localhost
       - SERVER_PORT=8000
-    volumes:
-       - ./frontend/src/components:/usr/src/app/my-app/src/components

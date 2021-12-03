@@ -202,7 +202,7 @@ export default {
     },
     methods: {
         async getData(){
-            const res = await fetch('http://localhost:8000/api/v1/backend/retrieve',{
+            const res = await fetch('http://SERVER_ADDRESS:SERVER_PORT/api/v1/backend/retrieve',{
                 method: 'GET',
                   headers: {
                         'Content-Type': 'application/json',

@@ -7,3 +7,5 @@ RUN pip install -r requirements_v1.txt
 
 COPY ./v1 /app/app
 
+RUN apt update
+RUN apt install -y iproute2

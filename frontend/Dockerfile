@@ -1,9 +1,6 @@
 
 FROM node:14.17.5-buster AS build
 
-COPY ./entryPoint.sh /
-RUN chmod +x entryPoint.sh
-
 WORKDIR /usr/src/app/my-app
 
 COPY . .

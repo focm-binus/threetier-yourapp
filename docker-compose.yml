@@ -5,11 +5,11 @@ services:
     container_name: mongo
     restart: always
   backend:
-    build: ./backend/
+    image: "${USER}/yourapp-backend:latest"
     container_name: backend
     command: ["/start-reload.sh"]
   nginx:
-    build: ./nginx/
+    image: "${USER}/yourapp-nginx:latest"
     container_name: nginx
     ports:
       - "8000:80"
@@ -20,8 +20,7 @@ services:
     depends_on:
       - backend
   frontend:
-    build:
-      context: ./frontend
+    image: "${USER}/yourapp-frontend:latest"
     container_name: frontend
     environment:
       - SERVER_ADDRESS=localhost

@@ -14,6 +14,8 @@ from fastapi.openapi.docs import (
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
+import os
+
 
 app = FastAPI(
         title="backend",
@@ -42,7 +44,7 @@ async def startup_event():
         import pymongo
         from app.constant import kfc
         from app.constant import shawarma
-        myclient = pymongo.MongoClient("mongodb://mongo:27017/")
+        myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGO_ADDRESS')}/")
 
         mydb = myclient["data"]
         mycol = mydb["card"]
@@ -123,7 +125,7 @@ async def populate():
         import pymongo
         from app.constant import kfc
         from app.constant import shawarma
-        myclient = pymongo.MongoClient("mongodb://mongo:27017/")
+        myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGO_ADDRESS')}/")
 
         mydb = myclient["data"]
         mycol = mydb["card"]
@@ -159,7 +161,7 @@ async def populate():
 async def retrieve():
     try:
         import pymongo
-        myclient = pymongo.MongoClient("mongodb://mongo:27017/")
+        myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGO_ADDRESS')}/")
 
         mydb = myclient["data"]
         mycol = mydb["card"]

@@ -8,10 +8,10 @@ WORKDIR /usr/src/app/my-app
 
 COPY . .
 
+RUN grep "fetch" /usr/src/app/my-app/src/components/Main.vue
+
 RUN npm install
 RUN npm run build
-
-ENTRYPOINT ["/entryPoint.sh"]
 
 FROM nginx:1.19 AS production
 

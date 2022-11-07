@@ -7,7 +7,8 @@ services:
   backend:
     image: "${USER}/yourapp-backend:latest"
     container_name: backend
-    command: ["/start-reload.sh"]
+    environment:
+      - MONGO_ADDRESS=mongo:27017
   nginx:
     image: "${USER}/yourapp-nginx:latest"
     container_name: nginx
@@ -22,6 +23,3 @@ services:
   frontend:
     image: "${USER}/yourapp-frontend:latest"
     container_name: frontend
-    environment:
-      - SERVER_ADDRESS=localhost
-      - SERVER_PORT=8000

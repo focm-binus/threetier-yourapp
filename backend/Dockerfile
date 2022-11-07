@@ -7,3 +7,4 @@ RUN pip install -r requirements_v1.txt
 
 COPY ./v1 /app/app
 
+CMD ["/start-reload.sh"]

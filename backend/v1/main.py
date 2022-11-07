@@ -46,31 +46,33 @@ async def startup_event():
 
         mydb = myclient["data"]
         mycol = mydb["card"]
+        
+        # avoid duplication
+        if len(list(mycol.find({},{'_id':0}))) == 0:
+            mylist = [
+                { 
+                'id':0,
+                'image': kfc,
+                'tagline': "KFC, who doesn't like it?",
+                'title': "KFC",
+                'badge': "FAV",
+                'like': "1k",
+                'view': "10k",
+                },
+                { 
+                'id':1,
+                'image': shawarma,
+                'tagline': "Shawarma, hmm?",
+                'title': "Shawarma",
+                'badge': "UH",
+                'like': "1",
+                'view': "1k",
+                },
+            ]
 
-        mylist = [
-            { 
-            'id':0,
-            'image': kfc,
-            'tagline': "KFC, who doesn't like it?",
-            'title': "KFC",
-            'badge': "FAV",
-            'like': "1k",
-            'view': "10k",
-            },
-            { 
-            'id':1,
-            'image': shawarma,
-            'tagline': "Shawarma, hmm?",
-            'title': "Shawarma",
-            'badge': "UH",
-            'like': "1",
-            'view': "1k",
-            },
-        ]
+            message = mycol.insert_many(mylist)
 
-        message = mycol.insert_many(mylist)
-
-        logger.info("[INFO] populating during startup successful")
+            logger.info("[INFO] populating during startup successful")
 
     except Exception as e:
         logger.warning(f"[WARN] populating during startup failed: {str(e)}")

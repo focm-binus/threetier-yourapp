@@ -1,5 +1,5 @@
 
-FROM node:14.17.5-buster
+FROM node:14.17.5-buster AS build
 
 COPY ./entryPoint.sh /
 RUN chmod +x entryPoint.sh
@@ -9,8 +9,16 @@ WORKDIR /usr/src/app/my-app
 COPY . .
 
 RUN npm install
-
-EXPOSE 8080
+RUN npm run build
 
 ENTRYPOINT ["/entryPoint.sh"]
-CMD ["npm", "run", "serve"]
+
+FROM nginx:1.19 AS production
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+USER root
+
+COPY --from=build /usr/src/app/my-app/dist /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]

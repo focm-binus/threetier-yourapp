@@ -4,17 +4,10 @@ services:
     image: mongo:5.0.3
     container_name: mongo
     restart: always
-    ports:
-      - 27017:27017
   backend:
     build: ./backend/
     container_name: backend
-    ports:
-      - "8001:80"
     command: ["/start-reload.sh"]
-    volumes:
-      - ./backend/v1:/app/app
-      - ./backend/v1/main.py:/app/app/main.py
   nginx:
     build: ./nginx/
     container_name: nginx
@@ -29,11 +22,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    ports:
-      - "8080:8080"
     container_name: frontend
     environment:
       - SERVER_ADDRESS=localhost
       - SERVER_PORT=8000
-    volumes:
-       - ./frontend/src/components:/usr/src/app/my-app/src/components

@@ -1,5 +1,5 @@
 
-FROM node:lts-buster
+FROM node:14.17.5-buster
 
 COPY ./entryPoint.sh /
 RUN chmod +x entryPoint.sh

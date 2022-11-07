@@ -2,7 +2,7 @@ from typing import Optional
 import logging
 logger = logging.getLogger(__name__)
 
-from fastapi import FastAPI, Header
+from fastapi import FastAPI, Header, Response
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -112,6 +112,10 @@ async def root():
     """
     return HTMLResponse(content=html_content, status_code=200)
 
+
+@app.get("/healthz", include_in_schema=False)
+async def check_health():
+    return Response(content="I am healthy!!", media_type="text/plain")
 
 @app.get("/populate")
 async def populate():

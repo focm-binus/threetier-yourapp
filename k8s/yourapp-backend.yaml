@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service	
+metadata:
+  name: yourapp-backend-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: yourapp-backend-deployment
+  ports:
+  - port: 8002
+    targetPort: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yourapp-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yourapp-backend-deployment
+  template:
+    metadata:
+      labels:
+        app: yourapp-backend-deployment
+    spec:
+      containers:
+      - name: yourapp-backend-container
+        image: "ardimasp/yourapp-backend:latest"
+        env:
+          - name: MONGO_ADDRESS
+            value: "{CHANGE MANUALLY}"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

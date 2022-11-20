@@ -44,7 +44,7 @@ async def startup_event():
         import pymongo
         from app.constant import kfc
         from app.constant import shawarma
-        myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGO_ADDRESS')}/")
+        myclient = pymongo.MongoClient(f"{os.getenv('MONGO_ADDRESS')}")
 
         mydb = myclient["data"]
         mycol = mydb["card"]
@@ -108,7 +108,7 @@ async def root():
         <title>First Service</title>
     </head>
     <body>
-        <h1>This could be the landing page for the first servicesss</h1>
+        <h1>This could be the landing page for the first service</h1>
     </body>
     </html>
     """
@@ -125,7 +125,7 @@ async def populate():
         import pymongo
         from app.constant import kfc
         from app.constant import shawarma
-        myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGO_ADDRESS')}/")
+        myclient = pymongo.MongoClient(f"{os.getenv('MONGO_ADDRESS')}")
 
         mydb = myclient["data"]
         mycol = mydb["card"]
@@ -161,7 +161,7 @@ async def populate():
 async def retrieve():
     try:
         import pymongo
-        myclient = pymongo.MongoClient(f"mongodb://{os.getenv('MONGO_ADDRESS')}/")
+        myclient = pymongo.MongoClient(f"{os.getenv('MONGO_ADDRESS')}")
 
         mydb = myclient["data"]
         mycol = mydb["card"]

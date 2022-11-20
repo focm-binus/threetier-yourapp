@@ -5,12 +5,12 @@ services:
     container_name: mongo
     restart: always
   backend:
-    image: "${USER}/yourapp-backend:latest"
+    image: "ardimasp/yourapp-backend:latest"
     container_name: backend
     environment:
-      - MONGO_ADDRESS=mongo:27017
+      - MONGO_ADDRESS=mongodb://mongo:27017
   nginx:
-    image: "${USER}/yourapp-nginx:latest"
+    image: "ardimasp/yourapp-nginx:latest"
     container_name: nginx
     ports:
       - "8000:80"
@@ -21,5 +21,5 @@ services:
     depends_on:
       - backend
   frontend:
-    image: "${USER}/yourapp-frontend:latest"
+    image: "ardimasp/yourapp-frontend:latest"
     container_name: frontend

@@ -9,4 +9,4 @@ docker-compose up --build
 
 3. Check if the data has been populated
 
-4. Access the webapp [here](http://localhost:8080/)
+4. Access the webapp [here](http://localhost:8000/)
